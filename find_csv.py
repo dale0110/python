@@ -1,7 +1,7 @@
 # coding:utf-8
   
 import csv
-
+import os
 import logging  
 
 def logger_init():
@@ -31,11 +31,13 @@ def logger_init():
 
 def read_csv(file_name):
 
-
     reader = csv.reader(open(file_name), delimiter=",")
-   
+       
     for values in reader:
-        print  values
+        #print ', '.join(values).decode('utf-8')
+        if '|'.join(values).decode('utf-8').find("阳谷")>0:
+            print ', '.join(values).decode('utf-8')
+            
 '''
     lineno = 0
     for values in reader:
@@ -46,23 +48,46 @@ def read_csv(file_name):
             print "Problem at line #",lineno
             print repr(values)
             break
+
 '''
+
+
+
 '''
     for Name,ctfid,Gender,Address,Mobile,Version in reader:
         print Name,ctfid,Gender,Address,Mobile,Version
 ''' 
         
-def find_in_csv(key,file_name):
+def find_in_csv(file_name):
 
     reader = csv.reader(open(file_name), delimiter=",")
-     
-    for Name,ctfid,Gender,Address,Mobile,Version in reader:
-        if Address.find("阳谷") >= 0:
-             print Name,ctfid,Gender,Address,Mobile,Version
+    lineno = 0 
+
+    try:
+        for values in reader:
+            lineno+=1
+            if ', '.join(values).decode('utf-8').find(key)>0:
+                print ', '.join(values).decode('utf-8')
+    except:
+        print "Problem at line #",lineno
+        print repr(values)
         
+def readdir(dir):
+    #dir = os.getcwd()
+    list = os.listdir(dir)
+    for line in list:
+        filepath = os.path.join(dir,line)
+        if line.find(".csv"):
+                print line
+                find_in_csv(filepath)
+
+
+
+key="闫楼"
 if __name__=="__main__":
     logger=logger_init()
     logger.info('start')
-    read_csv("5000.csv")
+    #read_csv("5000.csv")
+    readdir("E:/python/src/2000W")
     #find_in_csv('阳谷',"5000.csv"）
     logger.info('end')
