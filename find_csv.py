@@ -31,7 +31,7 @@ def logger_init():
 
 def read_csv(file_name):
 
-    reader = csv.reader(open(file_name), delimiter=",")
+    reader = csv.reader(open(file_name,'rU'), delimiter=",")
        
     for values in reader:
         #print ', '.join(values).decode('utf-8')
@@ -60,18 +60,22 @@ def read_csv(file_name):
         
 def find_in_csv(file_name):
 
-    reader = csv.reader(open(file_name), delimiter=",")
+    reader = csv.reader(open(file_name,'rU'), delimiter=",")
+    for values in reader:
+        if ', '.join(values).decode('utf-8').find(key)>0:
+            #print values
+            print ', '.join(values).decode('utf-8')
+
+'''
     lineno = 0 
 
     try:
-        for values in reader:
-            lineno+=1
-            if ', '.join(values).decode('utf-8').find(key)>0:
-                print ', '.join(values).decode('utf-8')
+
     except:
         print "Problem at line #",lineno
         print repr(values)
-        
+'''
+            
 def readdir(dir):
     #dir = os.getcwd()
     list = os.listdir(dir)
