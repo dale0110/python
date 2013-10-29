@@ -60,11 +60,15 @@ def read_csv(file_name):
         
 def find_in_csv(file_name):
 
-    reader = csv.reader(open(file_name,'rU'), delimiter=",")
+    cvsfile=open(file_name,'rU')
+    reader = csv.reader(cvsfile, delimiter=",")
     for values in reader:
         if ', '.join(values).decode('utf-8').find(key)>0:
             #print values
-            print ', '.join(values).decode('utf-8')
+            #print ', '.join(values).decode('utf-8')
+            global csvwriter
+            csvwriter.writerow(', '.join(values).decode('utf-8'))
+    cvsfile.close()
 
 '''
     lineno = 0 
@@ -82,15 +86,21 @@ def readdir(dir):
     for line in list:
         filepath = os.path.join(dir,line)
         if line.find(".csv"):
-                print line
-                find_in_csv(filepath)
+            #print line
+            find_in_csv(filepath)
 
 
 
-key="闫楼"
+
+key="海淀"
+def init_write():
+    fd=open('test.csv', 'wb')
+    csvwriter = csv.writer(fd,dialect='excel')
+    return csvwriter
 if __name__=="__main__":
     logger=logger_init()
     logger.info('start')
+    csvwriter=init_write()
     #read_csv("5000.csv")
     readdir("E:/python/src/2000W")
     #find_in_csv('阳谷',"5000.csv"）
