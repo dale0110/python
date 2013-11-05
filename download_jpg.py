@@ -2,6 +2,7 @@ import urllib
 import urllib2
 import time
 import re
+import sys
 
 def get_jpg(url,path):
     socket = urllib2.urlopen(url)
@@ -9,6 +10,10 @@ def get_jpg(url,path):
     with open(path, "wb") as jpg:
         jpg.write(data)
     socket.close()
+    
+def usage():
+    print "Usage: python" + ' ' + sys.argv[0] + ' ' + "<url>"
+    sys.exit()
     
 def test1():
 
@@ -20,7 +25,7 @@ def test1():
         print pic_url
 
 
-def main():
+def download_bing_pic():
     
     url = 'http://www.bing.com'
     f = urllib.urlopen(url)
@@ -33,6 +38,25 @@ def main():
         print pic_url[6:]
         urllib.urlretrieve(pic_url[6:],"test.jpg")
     f.close()
+    
+def download_cl_pic(url):
+    
+    f = urllib.urlopen(url)
+    html = f.read()
+    #src='http://102.imagebam.com/download/tT8uQQNEFqwdl5H_kDew7A/28622/286211832/460%281%29.jpg' 
+    url_re = re.compile(r'''src='[%:.a-zA-Z0-9-x_/]*.jpg''')
+    url_list = url_re.findall(html)
+    print url_list
+    for pic_url in url_list:
+        print pic_url[6:]
+        urllib.urlretrieve(pic_url[6:],"test.jpg")
+    f.close()
+    
+
+def main():
+    if len(sys.argv) < 2:
+        usage()
+    download_cl_pic(sys.argv[1])
 
 if __name__ == "__main__":
     main()
