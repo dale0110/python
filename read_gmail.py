@@ -3,8 +3,8 @@ import imaplib
 
 ''' 
 mailserver = imaplib.IMAP4_SSL('imap.gmail.com', 993)
-username = 'dale0110'
-password = 'DAle0110@'
+username = 'user'
+password = 'password@'
 mailserver.login(username, password)
  
 status, count = mailserver.select('Inbox')
@@ -65,7 +65,7 @@ print "GMail archiver 1.0"
 #user = raw_input("Enter your GMail username:")
 #pwd = getpass.getpass("Enter your password: ")
 m = imaplib.IMAP4_SSL("imap.gmail.com")
-m.login("dale0110","DAle0110@")
+m.login("user","password@")
 m.select("[Gmail]/All Mail")
 resp, items = m.search(None, "ALL")
 items = items[0].split()
