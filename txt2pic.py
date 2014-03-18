@@ -13,9 +13,9 @@ def zh_count(string):
     pattern = re.compile(re_zh)
     return len(pattern.findall(string))
 
-'''计算中文汉字数量'''                          
+'''计算中文标点符号'''                          
 def char_count(string):
-    re_char = '[a-zA-Z][a-zA-Z0-9_.,;!?，。？；：]'
+    re_char = "[\uFB00-\uFFFD]"
     pattern = re.compile(re_char)
     return len(pattern.findall(string))
                                
@@ -25,7 +25,7 @@ def char_count(string):
 font_size=20
 
 #每行文本高度
-char_height=font_size*1
+char_height=int(font_size*1.2)
 char_length=font_size*1
 
 line_max=0
@@ -64,9 +64,9 @@ def get_max(txt_file):
     line=0
     for line_buf in src_file:
         txt=line_buf.decode('gbk')
-        colum_length=zh_count(txt)+char_count(txt)
+        colum_length=zh_count(txt)+char_count(line_buf)
         global colum_max,line_max,pic_length,pic_height,char_length,char_height
-        print "%d %d %d %d" %(line_max,colum_max,pic_length,pic_height)
+        #print "%d %d %d %d" %(line,colum_max,zh_count(txt),char_count(txt))
         if colum_length>colum_max:
             colum_max=colum_length
         line+=1
