@@ -1,94 +1,104 @@
 # -*- coding: utf-8 -*-
 
-
- 
+import re
+import codecs
 from PIL import Image,ImageFont,ImageDraw
 
 
- 
-text = u'http://www.sharejs.com，test,hello'
- 
- 
-font = ImageFont.truetype("simsun.ttc",24)
- 
-lines = []
-line =''
- 
- 
-for word in text.split():
-    print word
-    if font.getsize(line+word)[0] >= 300:
-        lines.append(line)
-        line = u''
-        line += word 
-        print 'size=',font.getsize(line+word)[0]
-    else:
-        line = line + word
- 
- 
- 
-line_height = font.getsize(text)[1]
-img_height = line_height*(len(lines)+1)
- 
- 
-print 'len=',len(lines)
-print 'lines=',lines
- 
-im = Image.new("RGB",(444,img_height),(255,255,255))
-dr = ImageDraw.Draw(im)
- 
-x,y=5,5
-for line in lines:
-    dr.text((x,y),line,font=font,fill="#000000")
-    y += line_height
+
+
+'''计算中文汉字数量'''                          
+def zh_count(string):
+    re_zh = ur'[\u4e00-\u9fa5]'
+    pattern = re.compile(re_zh)
+    return len(pattern.findall(string))
+
+'''计算中文汉字数量'''                          
+def char_count(string):
+    re_char = '[a-zA-Z][a-zA-Z0-9_.,;!?，。？；：]'
+    pattern = re.compile(re_char)
+    return len(pattern.findall(string))
+                               
+
+'''初始化全局变量'''
+#字体大小
+font_size=20
+
+#每行文本高度
+char_height=font_size*1
+char_length=font_size*1
+
+line_max=0
+colum_max=0
+
+#图片宽度
+pic_length=0
+#图片长度
+pic_height=char_height
+
+
+'''写一行文本'''
+def draw_line(x,y,text,font):
+    draw.text((x,y),text,(0,0,0),font)
+
+def draw_line2(x,y,text,font):
+    colum = 0
+    while colum<colum_max :
+        print "colum:%d"  %colum 
+        draw.text((x+font_size*colum,y),unicode(text,'utf-8'),(0,0,0),font)
+        colum+=1
     
- 
- 
-im.save("1.1.jpg")
 
+def draw_text(txt_file,font):
+    src_file = open(txt_file,'r')
+    line=0
+    for line_buf in src_file:
+        #print line_buf.encode('utf-8')
+        #print line_buf.decode('gbk') 
+        draw_line(0,char_height*line,line_buf.decode('gbk'),font)
+        line+=1
+    src_file.close()
 
+def get_max(txt_file):
+    src_file = open(txt_file,'r')
+    line=0
+    for line_buf in src_file:
+        txt=line_buf.decode('gbk')
+        colum_length=zh_count(txt)+char_count(txt)
+        global colum_max,line_max,pic_length,pic_height,char_length,char_height
+        print "%d %d %d %d" %(line_max,colum_max,pic_length,pic_height)
+        if colum_length>colum_max:
+            colum_max=colum_length
+        line+=1
+    line_max=line
+    #图片宽度
+    pic_length=colum_max*char_length
+    #图片长度
+    pic_height=line_max*char_height
+    src_file.close() 
 
-'''
-from PIL import Image,ImageFont,ImageDraw
-font = ImageFont.truetype('simsun.ttc',24)
-img = Image.new('RGB',(300,200),(255,255,255))
+#def main():
+    
+get_max("test.txt")
+print "%f %f %f %f" %(line_max,colum_max,pic_length,pic_height)
+
+'''图片基本信息'''
+font = ImageFont.truetype('simsun.ttc',font_size)
+img = Image.new('RGB',(pic_length,pic_height),(255,255,255))
 draw = ImageDraw.Draw(img)
-draw.text( (0,50), u'你好,世界!',(0,0,0),font=font)
-draw.text((0,90),unicode('你好','utf-8'),(0,0,0),font=font) 
+
+'''
+line = 0
+while line<line_max :
+    print "line:%d"  %line 
+    #draw_line(0,line_height*line,"你好")
+    #draw_line2(0,char_height*line,"你",font)
+    line+=1
+'''
+draw_text("test.txt",font)
+
+ 
 img.save('test.jpg','JPEG')
-'''
-
-
-
-
-'''
-import os
-import StringIO
-import Image,ImageFont,ImageDraw
-import pygame
- 
-pygame.init()
- 
-text = u"这是一段测试文本，test 123。"
- 
-im = Image.new("RGB", (300, 50), (255, 255, 255))
-#dr = ImageDraw.Draw(im)
-#font = ImageFont.truetype(os.path.join("fonts", "simsun.ttc"), 18)
-
-font = pygame.font.Font(os.path.join("fonts", "simsun.ttc"), 14)
-
-#dr.text((10, 5), text, font=font, fill="#000000")
-rtext = font.render(text, True, (0, 0, 0), (255, 255, 255))
- 
-#pygame.image.save(rtext, "t.gif")
-#sio = StringIO.StringIO()
-sio = "test4.jpg"
-pygame.image.save(rtext, sio)
-#sio.seek(0)
- 
-line = Image.open(sio)
-im.paste(line, (10, 5))
- 
-im.show()
-im.save("t.png")
-'''
+    
+#if __name__ == "__main__":
+#    main()
