@@ -18,46 +18,7 @@ def char_count(string):
     re_char = "[\uFB00-\uFFFD]"
     pattern = re.compile(re_char)
     return len(pattern.findall(string))
-                               
 
-'''初始化全局变量'''
-#字体大小
-font_size=20
-
-#每行文本高度
-char_height=int(font_size*1.2)
-char_length=font_size*1
-
-line_max=0
-colum_max=0
-
-#图片宽度
-pic_length=0
-#图片长度
-pic_height=char_height
-
-
-'''写一行文本'''
-def draw_line(x,y,text,font):
-    draw.text((x,y),text,(0,0,0),font)
-
-def draw_line2(x,y,text,font):
-    colum = 0
-    while colum<colum_max :
-        print "colum:%d"  %colum 
-        draw.text((x+font_size*colum,y),unicode(text,'utf-8'),(0,0,0),font)
-        colum+=1
-    
-
-def draw_text(txt_file,font):
-    src_file = open(txt_file,'r')
-    line=0
-    for line_buf in src_file:
-        #print line_buf.encode('utf-8')
-        #print line_buf.decode('gbk') 
-        draw_line(0,char_height*line,line_buf.decode('gbk'),font)
-        line+=1
-    src_file.close()
 
 def get_max(txt_file):
     src_file = open(txt_file,'r')
@@ -72,10 +33,74 @@ def get_max(txt_file):
         line+=1
     line_max=line
     #图片宽度
-    pic_length=colum_max*char_length
+    #pic_length=colum_max*char_length
     #图片长度
     pic_height=line_max*char_height
-    src_file.close() 
+    src_file.close()                            
+
+
+class picure:
+    #字体大小
+    font_size=20
+    #每行文本高度
+    char_height=int(font_size*1.2)
+    char_length=font_size*1
+    #图片宽度
+    pic_length=800
+    #图片长度
+    pic_height=char_height
+    line_max=0
+    colum_max=0
+    x=0
+    y=0
+    '''写一行文本'''
+    def draw_line(self,text):
+        draw.text((self.x,self.y),text,(0,0,0),self.font)
+    '''将一个汉字横向打印一列'''
+    def draw_line2(self,text):
+        colum = 0
+        while colum<self.colum_max :
+            print "colum:%d"  %colum 
+            draw.text((self.x+self.font_size*colum,self.y),unicode(text,'utf-8'),(0,0,0),self.font)
+            colum+=1
+
+
+class text_line:
+    #字体大小
+    font_size=20
+    #每行文本高度
+    height=0
+    length=0
+    #图片宽度
+    pic_length=800
+    colum_max=0
+    x=0
+    y=0
+    text=''
+    
+    def __init__(self,string,positon_x,positon_y,font_size):
+        self.font_size
+        self.text=string
+        self.x=positon_x
+        self.y=positon_y
+        self.height=int(font_size*1.2)
+        self.length=font_size*1
+    '''写一行文本'''
+    def draw_line(self):
+        draw.text((self.x,self.y),self.text,(0,0,0),self.font)
+
+
+def draw_text(txt_file,font):
+    src_file = open(txt_file,'r')
+    line=0
+    for line_buf in src_file:
+        #print line_buf.encode('utf-8')
+        #print line_buf.decode('gbk') 
+        draw_line(0,char_height*line,line_buf.decode('gbk'),font)
+        line+=1
+    src_file.close()
+
+
 
 #def main():
     
