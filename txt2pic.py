@@ -2,6 +2,7 @@
 
 import re
 import codecs
+import chardet
 from PIL import Image,ImageFont,ImageDraw
 
 
@@ -34,27 +35,26 @@ pic_length=600
 pic_height=0
 
 line_max=0
-colum_max=int(pic_length/char_length)*2
+colum_max=int(pic_length/char_length)
 
 
 def draw_moreline(x,y,text,font,line):
-    decode_text=text.decode('gbk')
-    #decode_text=text
+    decode_text=text.decode('gb2312')
     #colum_length=zh_count(decode_text)+char_count(decode_text)
-    colum_length=len(text)
+    colum_length=len(decode_text)
     global colum_max,line_max,pic_length,pic_height,char_length,char_height
     #print decode_text
-    print "txt_length:%d colum_length/colum_max:%d" %(len(text),int(colum_length/colum_max))
+    print "txt_length:%d colum_length/colum_max:%d" %(len(decode_text),int(colum_length/colum_max))
     txt_num=int(colum_length/colum_max)+1
     print "txt_num:%d colum_length:%d" %(txt_num,colum_length)
     i=1
+    print "colum_max:%d" %(colum_max)
     while i<=txt_num:
         print i
-        if i==txt_num:
+        if i<txt_num:
             line_buf=decode_text[(i-1)*colum_max:i*colum_max]
-        elif i<txt_num:
+        elif i==txt_num:
             line_buf=decode_text[(i-1)*colum_max:colum_length]
-        print line_buf
         draw_oneline(x,char_height*line,line_buf,font)
         i+=1
         line+=1
@@ -64,6 +64,9 @@ def draw_moreline(x,y,text,font,line):
 
 '''写一行文本'''
 def draw_oneline(x,y,text,font):
+    print "x:%d y:%d" %(x,y)
+    print text
+    print
     draw.text((x,y),text,(0,0,0),font)
 
 def draw_line2(x,y,text,font):
@@ -78,7 +81,7 @@ def draw_text(txt_file,font):
     src_file = open(txt_file,'r')
     line=0
     for line_buf in src_file:
-        #print line_buf.encode('utf-8')
+        print chardet.detect(line_buf)
         line=draw_moreline(0,char_height*line,line_buf,font,line)
     src_file.close()
 
@@ -86,7 +89,7 @@ def get_max(txt_file):
     src_file = open(txt_file,'r')
     line=0
     for line_buf in src_file:
-        txt=line_buf.decode('gbk')
+        txt=line_buf.decode('gb2312')
         #txt=line_buf
         print txt
         colum_length=len(txt)
