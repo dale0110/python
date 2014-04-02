@@ -30,7 +30,7 @@ char_height=int(font_size*1.2)
 char_length=font_size*1
 
 #图片宽度
-pic_length=600
+pic_length=800
 #图片长度
 pic_height=0
 
@@ -39,11 +39,10 @@ colum_max=int(pic_length/char_length)
 
 
 def draw_moreline(x,y,text,font,line):
-    decode_text=text.decode('gb2312')
-    #colum_length=zh_count(decode_text)+char_count(decode_text)
+    txt_code=chardet.detect(text)
+    decode_text=text.decode(txt_code['encoding'])
     colum_length=len(decode_text)
     global colum_max,line_max,pic_length,pic_height,char_length,char_height
-    #print decode_text
     print "txt_length:%d colum_length/colum_max:%d" %(len(decode_text),int(colum_length/colum_max))
     txt_num=int(colum_length/colum_max)+1
     print "txt_num:%d colum_length:%d" %(txt_num,colum_length)
@@ -66,7 +65,7 @@ def draw_moreline(x,y,text,font,line):
 def draw_oneline(x,y,text,font):
     print "x:%d y:%d" %(x,y)
     print text
-    print
+    print len(text)
     draw.text((x,y),text,(0,0,0),font)
 
 def draw_line2(x,y,text,font):
@@ -81,7 +80,6 @@ def draw_text(txt_file,font):
     src_file = open(txt_file,'r')
     line=0
     for line_buf in src_file:
-        print chardet.detect(line_buf)
         line=draw_moreline(0,char_height*line,line_buf,font,line)
     src_file.close()
 
@@ -89,13 +87,15 @@ def get_max(txt_file):
     src_file = open(txt_file,'r')
     line=0
     for line_buf in src_file:
-        txt=line_buf.decode('gb2312')
-        #txt=line_buf
-        print txt
+        #print line_buf
+        if len(line_buf)==0:
+            continue
+        txt_code=chardet.detect(line_buf)
+        txt=line_buf.decode(txt_code['encoding'])
+        #print txt
         colum_length=len(txt)
         global colum_max,line_max,pic_length,pic_height,char_length,char_height
-        print "%d %d %d %d %d" %(line_max,colum_max,pic_length,pic_height,colum_length)
-        line+=int(colum_max/colum_length)+1
+        line+=int(colum_length/colum_max)+1
     line_max=line
     #图片长度
     pic_height=line_max*char_height
