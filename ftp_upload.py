@@ -119,8 +119,10 @@ def ftpupload(host,user,passwd):
         ftp = ftplib.FTP(host)
         ftp.login(USER,PASSWORD)
         ftp.set_debuglevel(0)
-        uploadfile(ftp,'/home/sd/wason/nbase.ini','''F:\\test\\nbase.ini''')
-        uploadfile(ftp,'/home/sd/SNP_WASON','''F:\\test\\SNP_WASON''')
+        uploadfile(ftp,'/home/sd/wason/nbase.ini',"F:\\test\\nbase.ini")
+        uploadfile(ftp,'/home/sd/SNP_WASON',"F:\\test\\SNP_WASON")
+        uploadfile(ftp,'/home/sd/wason/config.ini',"F:\\test\\config.ini-wason")
+        uploadfile(ftp,'/home/sd/aps/config.ini',"F:\\test\\config.ini-aps")
         ftplogger.info('upload OK')
         ftp.quit()
     except Exception,ex:
