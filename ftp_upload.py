@@ -121,7 +121,6 @@ def ftpupload(host,user,passwd):
         ftp.set_debuglevel(0)
         uploadfile(ftp,'/home/sd/wason/nbase.ini','''F:\\test\\nbase.ini''')
         uploadfile(ftp,'/home/sd/SNP_WASON','''F:\\test\\SNP_WASON''')
-        telnet_cmd(host,9023)
         ftplogger.info('upload OK')
         ftp.quit()
     except Exception,ex:
@@ -140,8 +139,6 @@ def main():
         while not message=="":
             cmdList.append(message)
             message=cmdListFile.readline()
-        now=time.localtime(time.time())
-        now=time.strftime("%Y_%m_%d_%H_%M_%S", now)
         while 1: 
             message=configfile.readline()
             if len(message)< 10:
@@ -155,6 +152,7 @@ def main():
             if not ( host=="" or port=="") :
                 ftplogger.info('start ftp:'+(str(host)))
                 ftpupload(str(host),str(user),str(passwd))
+                telnet_cmd(str(host),9023)
             else :
                 print "configfile error"
         configfile.close()
